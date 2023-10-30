@@ -198,22 +198,38 @@ class REDataProcessor(object):
             return result
 
     def _load_schema(self, ):
-        with open(self.schema_path, 'r', encoding='utf8') as f:
-            lines = f.readlines()
+        with open(self.schema_path, 'r', encoding='utf-8') as f:
+            # lines = f.readlines()
             predicate_list = ["无关系"]
             s_entity = []
             o_entity = []
             pre_sub_obj = {}
-            for line in lines:
-                # 返回传入字符串的表达式的结果。就是说：将字符串当成有效的表达式 来求值 并 返回计算结果。eval函数就是实现list、dict、tuple与str之间的转化，同样str函数把list，dict，tuple转为为字符串
-                if (line != ''):
-                    data = json.loads(eval(line)) 
-                    if data['subject_type'] not in s_entity:
-                        s_entity.append(data['subject_type'])
-                    if data['object_type'] not in o_entity:
-                        o_entity.append(data['object_type'])
-                    predicate_list.append(data['predicate'] + '|' + data['object_type'])
-                    pre_sub_obj[data['predicate'] + '|' + data['object_type']] = [data['subject_type'], data['object_type']]
+            # for line in lines:
+            #     # 返回传入字符串的表达式的结果。就是说：将字符串当成有效的表达式 来求值并返回计算结果。eval函数就是实现list、dict、tuple与str之间的转化，同样str函数把list，dict，tuple转为为字符串
+            #     if (line != ''):
+            #         print(type(line))
+            #         print(line)
+            #         data = json.loads(eval(line)) 
+            #         if data['subject_type'] not in s_entity:
+            #             s_entity.append(data['subject_type'])
+            #         if data['object_type'] not in o_entity:
+            #             o_entity.append(data['object_type'])
+            #         predicate_list.append(data['predicate'] + '|' + data['object_type'])
+            #         pre_sub_obj[data['predicate'] + '|' + data['object_type']] = [data['subject_type'], data['object_type']]
+
+            """
+            json.load()操作的是文件
+            json.loads()操作的是字符串
+            """
+
+            datas = json.load(f)
+            for data in datas:
+                if data['subject_type'] not in s_entity:
+                  s_entity.append(data['subject_type'])
+                if data['object_type'] not in o_entity:
+                  o_entity.append(data['object_type'])
+                predicate_list.append(data['predicate'] + '|' + data['object_type'])
+                pre_sub_obj[data['predicate'] + '|' + data['object_type']] = [data['subject_type'], data['object_type']]
 
             s_entity_type = {}
             for i, e in enumerate(s_entity):  # 主语
