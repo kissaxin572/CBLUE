@@ -2,6 +2,7 @@ import numpy as np
 import torch
 from torch.utils.data import Dataset
 from cblue.models import convert_examples_to_features_for_tokens
+from cblue.models.zen.data import convert_examples_to_features
 
 
 class EEDataset(Dataset):

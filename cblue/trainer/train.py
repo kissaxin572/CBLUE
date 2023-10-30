@@ -201,10 +201,10 @@ class EETrainer(Trainer):
 
         if self.args.model_type == 'zen':
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids,
-                            labels=labels, ngram_ids=input_ngram_ids, ngram_positions=ngram_position_matrix,
+                            labels=labels.to(torch.int64), ngram_ids=input_ngram_ids, ngram_positions=ngram_position_matrix,
                             ngram_attention_mask=ngram_attention_mask, ngram_token_type_ids=ngram_token_type_ids)
         else:
-            outputs = model(labels=labels, input_ids=input_ids, token_type_ids=token_type_ids,
+            outputs = model(labels=labels.to(torch.int64), input_ids=input_ids, token_type_ids=token_type_ids,
                             attention_mask=attention_mask)
 
         loss = outputs[0]
@@ -240,15 +240,15 @@ class EETrainer(Trainer):
             with torch.no_grad():
                 if self.args.model_type == 'zen':
                     outputs = model(input_ids=input_ids, token_type_ids=token_type_ids, attention_mask=attention_mask,
-                                    labels=labels, ngram_ids=input_ngram_ids,
+                                    labels=labels.to(torch.int64), ngram_ids=input_ngram_ids,
                                     ngram_positions=ngram_position_matrix,
                                     ngram_token_type_ids=ngram_token_type_ids,
                                     ngram_attention_mask=ngram_attention_mask)
                 else:
-                    outputs = model(labels=labels, input_ids=input_ids, token_type_ids=token_type_ids,
+                    outputs = model(labels=labels.to(torch.int64), input_ids=input_ids, token_type_ids=token_type_ids,
                                     attention_mask=attention_mask)
 
-                # outputs = model(labels=labels, **inputs)
+                # outputs = model(labels=labels.to(torch.int64), **inputs)
                 loss, logits = outputs[:2]
                 # active_index = inputs['attention_mask'].view(-1) == 1
                 active_index = attention_mask.view(-1) == 1
@@ -399,7 +399,7 @@ class STSTrainer(Trainer):
             inputs['ngram_token_type_ids'] = inputs['ngram_token_type_ids'].to(self.args.device)
 
         # default using 'Transformers' library models.
-        outputs = model(labels=labels, **inputs)
+        outputs = model(labels=labels.to(torch.int64), **inputs)
         loss = outputs[0]
         loss.backward()
 
@@ -441,7 +441,7 @@ class STSTrainer(Trainer):
                 inputs['ngram_token_type_ids'] = inputs['ngram_token_type_ids'].to(self.args.device)
 
             with torch.no_grad():
-                outputs = model(labels=labels, **inputs)
+                outputs = model(labels=labels.to(torch.int64), **inputs)
                 loss, logits = outputs[:2]
 
             if preds is None:
@@ -591,7 +591,7 @@ class QICTrainer(Trainer):
         inputs['token_type_ids'] = inputs['token_type_ids'].to(self.args.device)
 
         # default using 'Transformers' library models.
-        outputs = model(labels=labels, **inputs)
+        outputs = model(labels=labels.to(torch.int64), **inputs)
         loss = outputs[0]
         loss.backward()
 
@@ -632,7 +632,7 @@ class QICTrainer(Trainer):
                 inputs['ngram_token_type_ids'] = inputs['ngram_token_type_ids'].to(self.args.device)
 
             with torch.no_grad():
-                outputs = model(labels=labels, **inputs)
+                outputs = model(labels=labels.to(torch.int64), **inputs)
                 loss, logits = outputs[:2]
 
             if preds is None:
@@ -779,7 +779,7 @@ class QQRTrainer(Trainer):
         inputs['token_type_ids'] = inputs['token_type_ids'].to(self.args.device)
 
         # default using 'Transformers' library models.
-        outputs = model(labels=labels, **inputs)
+        outputs = model(labels=labels.to(torch.int64), **inputs)
         loss = outputs[0]
         loss.backward()
 
@@ -822,7 +822,7 @@ class QQRTrainer(Trainer):
             inputs['token_type_ids'] = inputs['token_type_ids'].to(self.args.device)
 
             with torch.no_grad():
-                outputs = model(labels=labels, **inputs)
+                outputs = model(labels=labels.to(torch.int64), **inputs)
                 loss, logits = outputs[:2]
 
             if preds is None:
@@ -966,7 +966,7 @@ class QTRTrainer(Trainer):
         inputs['token_type_ids'] = inputs['token_type_ids'].to(self.args.device)
 
         # default using 'Transformers' library models.
-        outputs = model(labels=labels, **inputs)
+        outputs = model(labels=labels.to(torch.int64), **inputs)
         loss = outputs[0]
         loss.backward()
 
@@ -1009,7 +1009,7 @@ class QTRTrainer(Trainer):
             inputs['token_type_ids'] = inputs['token_type_ids'].to(self.args.device)
 
             with torch.no_grad():
-                outputs = model(labels=labels, **inputs)
+                outputs = model(labels=labels.to(torch.int64), **inputs)
                 loss, logits = outputs[:2]
 
             if preds is None:
@@ -1147,10 +1147,10 @@ class CTCTrainer(Trainer):
         # default using 'Transformers' library models.
         if self.args.model_type == 'zen':
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, token_type_ids=token_type_ids,
-                            labels=labels, ngram_ids=input_ngram_ids, ngram_positions=ngram_position_matrix,
+                            labels=labels.to(torch.int64), ngram_ids=input_ngram_ids, ngram_positions=ngram_position_matrix,
                             ngram_attention_mask=ngram_attention_mask, ngram_token_type_ids=ngram_token_type_ids)
         else:
-            outputs = model(labels=labels, input_ids=input_ids, token_type_ids=token_type_ids,
+            outputs = model(labels=labels.to(torch.int64), input_ids=input_ids, token_type_ids=token_type_ids,
                             attention_mask=attention_mask)
         loss = outputs[0]
         loss.backward()
@@ -1185,12 +1185,12 @@ class CTCTrainer(Trainer):
             with torch.no_grad():
                 if self.args.model_type == 'zen':
                     outputs = model(input_ids=input_ids, token_type_ids=token_type_ids, attention_mask=attention_mask,
-                                    labels=labels, ngram_ids=input_ngram_ids,
+                                    labels=labels.to(torch.int64), ngram_ids=input_ngram_ids,
                                     ngram_positions=ngram_position_matrix,
                                     ngram_token_type_ids=ngram_token_type_ids,
                                     ngram_attention_mask=ngram_attention_mask)
                 else:
-                    outputs = model(labels=labels, input_ids=input_ids, token_type_ids=token_type_ids,
+                    outputs = model(labels=labels.to(torch.int64), input_ids=input_ids, token_type_ids=token_type_ids,
                                     attention_mask=attention_mask)
 
                 loss, logits = outputs[:2]
@@ -1397,6 +1397,7 @@ class ERTrainer(Trainer):
             obj_start_label = obj_start_label.to(self.args.device)
             obj_end_label = obj_end_label.to(self.args.device)
 
+
             if self.args.model_type == 'zen':
                 input_ngram_ids = input_ngram_ids.to(self.args.device)
                 ngram_token_type_ids = ngram_token_type_ids.to(self.args.device)
@@ -1418,6 +1419,10 @@ class ERTrainer(Trainer):
                                                                                                attention_mask)
 
             active_index = attention_mask.view(-1) == 1
+            active_index = active_index.to("cpu")
+            # print(f"{active_index.device}")     # cuda:0
+            # print(f"{(sub_start_logits.detach().view(-1) >= 0.5).cpu().long().device}")
+
             sub_start_preds.extend((sub_start_logits.detach().view(-1) >= 0.5).cpu().long()[active_index])
             sub_end_preds.extend((sub_end_logits.detach().view(-1) >= 0.5).cpu().long()[active_index])
             obj_start_preds.extend((obj_start_logits.detach().view(-1) >= 0.5).cpu().long()[active_index])
@@ -1427,6 +1432,7 @@ class ERTrainer(Trainer):
             sub_end_trues.extend(sub_end_label.detach().cpu().view(-1)[active_index].tolist())
             obj_start_trues.extend(obj_start_label.detach().cpu().view(-1)[active_index].tolist())
             obj_end_trues.extend(obj_end_label.detach().cpu().view(-1)[active_index].tolist())
+
 
         s_start_p, s_start_r, s_start_f1, _ = er_metric(sub_start_preds, sub_start_trues)
         s_end_p, s_end_r, s_end_f1, _ = er_metric(sub_end_preds, sub_end_trues)
@@ -1762,7 +1768,7 @@ class CDNForCLSTrainer(Trainer):
             inputs['ngram_attention_mask'] = inputs['ngram_attention_mask'].to(self.args.device)
             inputs['ngram_token_type_ids'] = inputs['ngram_token_type_ids'].to(self.args.device)
 
-        outputs = model(labels=labels, **inputs)
+        outputs = model(labels=labels.to(torch.int64), **inputs)
         loss = outputs[0]
         loss.backward()
 
@@ -1942,7 +1948,7 @@ class CDNForNUMTrainer(Trainer):
             inputs['ngram_attention_mask'] = inputs['ngram_attention_mask'].to(self.args.device)
             inputs['ngram_token_type_ids'] = inputs['ngram_token_type_ids'].to(self.args.device)
 
-        outputs = model(labels=labels, **inputs)
+        outputs = model(labels=labels.to(torch.int64), **inputs)
         loss = outputs[0]
         loss.backward()
 
@@ -1982,7 +1988,7 @@ class CDNForNUMTrainer(Trainer):
                 inputs['ngram_token_type_ids'] = inputs['ngram_token_type_ids'].to(self.args.device)
 
             with torch.no_grad():
-                outputs = model(labels=labels, **inputs)
+                outputs = model(labels=labels.to(torch.int64), **inputs)
                 loss, logits = outputs[:2]
 
             if preds is None:

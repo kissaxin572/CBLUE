@@ -128,9 +128,9 @@ class EEDataProcessor(object):
 class REDataProcessor(object):
     def __init__(self, root):
         self.task_data_dir = os.path.join(root, 'CMeIE')
-        self.train_path = os.path.join(self.task_data_dir, 'CMeIE_train.json')
-        self.dev_path = os.path.join(self.task_data_dir, 'CMeIE_dev.json')
-        self.test_path = os.path.join(self.task_data_dir, 'CMeIE_test.json')
+        self.train_path = os.path.join(self.task_data_dir, 'CMeIE_train.jsonl')
+        self.dev_path = os.path.join(self.task_data_dir, 'CMeIE_dev.jsonl')
+        self.test_path = os.path.join(self.task_data_dir, 'CMeIE_test.jsonl')
 
         self.schema_path = os.path.join(self.task_data_dir, '53_schemas.json')
         self.pre_sub_obj = None
@@ -205,13 +205,15 @@ class REDataProcessor(object):
             o_entity = []
             pre_sub_obj = {}
             for line in lines:
-                data = json.loads(line)
-                if data['subject_type'] not in s_entity:
-                    s_entity.append(data['subject_type'])
-                if data['object_type'] not in o_entity:
-                    o_entity.append(data['object_type'])
-                predicate_list.append(data['predicate'] + '|' + data['object_type'])
-                pre_sub_obj[data['predicate'] + '|' + data['object_type']] = [data['subject_type'], data['object_type']]
+                # 返回传入字符串的表达式的结果。就是说：将字符串当成有效的表达式 来求值 并 返回计算结果。eval函数就是实现list、dict、tuple与str之间的转化，同样str函数把list，dict，tuple转为为字符串
+                if (line != ''):
+                    data = json.loads(eval(line)) 
+                    if data['subject_type'] not in s_entity:
+                        s_entity.append(data['subject_type'])
+                    if data['object_type'] not in o_entity:
+                        o_entity.append(data['object_type'])
+                    predicate_list.append(data['predicate'] + '|' + data['object_type'])
+                    pre_sub_obj[data['predicate'] + '|' + data['object_type']] = [data['subject_type'], data['object_type']]
 
             s_entity_type = {}
             for i, e in enumerate(s_entity):  # 主语
@@ -267,9 +269,9 @@ class REDataProcessor(object):
 class ERDataProcessor(object):
     def __init__(self, root):
         self.task_data_dir = os.path.join(root, 'CMeIE')
-        self.train_path = os.path.join(self.task_data_dir, 'CMeIE_train.json')
-        self.dev_path = os.path.join(self.task_data_dir, 'CMeIE_dev.json')
-        self.test_path = os.path.join(self.task_data_dir, 'CMeIE_test.json')
+        self.train_path = os.path.join(self.task_data_dir, 'CMeIE_train.jsonl')
+        self.dev_path = os.path.join(self.task_data_dir, 'CMeIE_dev.jsonl')
+        self.test_path = os.path.join(self.task_data_dir, 'CMeIE_test.jsonl')
 
     def get_train_sample(self):
         return self._pre_process(self.train_path, is_predict=False)

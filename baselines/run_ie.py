@@ -76,13 +76,13 @@ def main():
     args = parser.parse_args()
 
     if not os.path.exists(args.output_dir):
-        os.mkdir(args.output_dir)
+        os.makedirs(args.output_dir)
     args.output_dir = os.path.join(args.output_dir, args.task_name)
     if not os.path.exists(args.output_dir):
-        os.mkdir(args.output_dir)
+        os.makedirs(args.output_dir)
     args.output_dir = os.path.join(args.output_dir, args.model_name)
     if not os.path.exists(args.output_dir):
-        os.mkdir(args.output_dir)
+        os.makedirs(args.output_dir)
 
     logger = init_logger(os.path.join(args.output_dir, f'{args.task_name}_{args.model_name}.log'))
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
