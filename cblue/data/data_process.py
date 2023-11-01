@@ -624,7 +624,7 @@ class CDNDataProcessor(object):
         return dictionary, index, tfidf
 
     def _recall(self, texts):
-        recall_scores_idx = np.zeros((len(texts), self.recall_k), dtype=np.int)
+        recall_scores_idx = np.zeros((len(texts), self.recall_k), dtype=np.int64)
 
         recall_scores = np.zeros((len(texts), self.recall_k))
         for i, x in tqdm.tqdm(enumerate(texts), total=len(texts)):
