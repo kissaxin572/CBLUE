@@ -30,6 +30,15 @@ def write_dict(dict_path, dict_data):
 
 
 def str_q2b(text):
+    """
+    将Unicode编码转换为全角编码的函数
+
+    Args:
+        text (str): 待转换的Unicode编码字符串
+
+    Returns:
+        str: 转换后的全角编码字符串
+    """
     ustring = text
     rstring = ""
     for uchar in ustring:
